@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Core: Property Valuation</title>
+    <!-- Futuristic Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Animated Cyber Grid Background -->
+    <div class="cyber-grid"></div>
+
+    <div class="page-wrapper">
+        <div class="cyber-card">
+            
+            <div class="card-header">
+                <div class="glow-line"></div>
+                <h1>CALIFORNIA HOUSE PREDICTION SYSTEM</h1>
+                <p>SYSTEM READY // ENTER PROPERTY DATA</p>
+            </div>
+            
+            <form id="predictForm" class="prediction-form">
+                <div class="form-grid">
+                    
+                    <div class="input-wrapper">
+                        <label>MEDIAN INCOME</label>
+                        <input type="number" step="any" name="MedInc" placeholder="> 8.32" required>
+                    </div>
+                    
+                    <div class="input-wrapper">
+                        <label>HOUSE AGE</label>
+                        <input type="number" step="any" name="HouseAge" placeholder="> 41.0" required>
+                    </div>
+                    
+                    <div class="input-wrapper">
+                        <label>AVG ROOMS</label>
+                        <input type="number" step="any" name="AveRooms" placeholder="> 6.98" required>
+                    </div>
+                    
+                    <div class="input-wrapper">
+                        <label>POPULATION</label>
+                        <input type="number" step="any" name="Population" placeholder="> 322" required>
+                    </div>
+                    
+                    <div class="input-wrapper">
+                        <label>AVG OCCUPANTS</label>
+                        <input type="number" step="any" name="AveOccup" placeholder="> 2.55" required>
+                    </div>
+                    
+                    <div class="input-wrapper">
+                        <label>LATITUDE</label>
+                        <input type="number" step="any" name="Latitude" placeholder="> 37.88" required>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="cyber-btn">
+                    <span id="btnText">INITIALIZE SCAN</span>
+                    <div class="btn-glitch"></div>
+                </button>
+            </form>
+
+            <!-- Result Box -->
+            <div id="result-box" class="result-box hidden">
+                <p class="result-label">ESTIMATED VALUE DETECTED</p>
+                <h2 id="predictionText" class="neon-text">$0.00</h2>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('predictForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const resultBox = document.getElementById('result-box');
+            const predictionText = document.getElementById('predictionText');
+
+            // Booting sequence UI
+            btnText.innerText = 'CALCULATING...';
+            btn.classList.add('scanning');
+            btn.disabled = true;
+            resultBox.classList.add('hidden');
+            predictionText.classList.remove('glow-pulse');
+
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.text();
+                
+                // Show Result with futuristic animation
+                setTimeout(() => {
+                    predictionText.innerText = result.replace('Predicted Price is ', '');
+                    resultBox.classList.remove('hidden');
+                    predictionText.classList.add('glow-pulse');
+                }, 800); // 800ms ka chota delay lagaya hai sci-fi feel ke liye
+                
+            } catch (error) {
+                predictionText.innerText = "SYSTEM ERROR";
+                resultBox.classList.remove('hidden');
+            } finally {
+                setTimeout(() => {
+                    btnText.innerText = 'INITIALIZE SCAN';
+                    btn.classList.remove('scanning');
+                    btn.disabled = false;
+                }, 800);
+            }
+        });
+    </script>
+</body>
+</html>
